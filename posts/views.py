@@ -1,5 +1,7 @@
-from flask import render_template, Blueprint
-from .models import Post, db
+from flask import Blueprint, render_template
+from datetime import datetime
+from run import db
+from .models import Post
 
 posts = Blueprint("posts", __name__)
 

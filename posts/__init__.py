@@ -1,16 +1,22 @@
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
-db = SQLAlchemy()
+from flask import Blueprint, render_template
+
+# Reutilize a instância global do db criada no run.py
+from run import db
+
+posts = Blueprint("posts", __name__)
 
 
-def create_app():
-    app = Flask(__name__)
-    app.config["SECRET_KEY"] = "your_secret_key"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///posts.db"
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    author = db.Column(db.String(50), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+    views = db.Column(db.Integer, default=0)
 
-    db.init_app(app)
 
-    from posts import views
-
-    return app
+@posts.route("/")
+def index():
+    return render_template("index.html")
